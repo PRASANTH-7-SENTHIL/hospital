@@ -1,66 +1,68 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
+import styles from './page.module.css';
+import MapComponent from '@/components/Map';
+import { useAmbulance } from '@/hooks/useAmbulance';
+
+export default function Dashboard() {
+  const { latitude, longitude, lastUpdated, isLive, error } = useAmbulance();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className={styles.main}>
+      <header className={styles.header}>
+        <div className={styles.title}>City Hospital Emergency</div>
+        <div className={styles.statusIndicator}>
+          {isLive ? (
+            <>
+              <span style={{ fontSize: '10px' }}>🔴</span> Ambulance Live
+            </>
+          ) : (
+            'Offline'
+          )}
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </header>
+
+      <div className={styles.container}>
+        <section className={styles.mapSection}>
+          <MapComponent lat={latitude} lng={longitude} />
+        </section>
+
+        <section className={styles.infoSection}>
+          <div className={styles.card}>
+            <div className={styles.cardTitle}>Status</div>
+            <div className={`${styles.cardValue} ${isLive ? styles.liveBadge : styles.noSignal}`}>
+              {error ? 'Error Fetching Data' : isLive ? 'Tracking Active' : 'No Signal from Ambulance'}
+            </div>
+          </div>
+
+          <div className={styles.card}>
+            <div className={styles.cardTitle}>Current Location</div>
+            <div className={styles.cardValue}>
+              {latitude && longitude ? (
+                <>
+                  <div>{latitude.toFixed(5)},</div>
+                  <div>{longitude.toFixed(5)}</div>
+                </>
+              ) : (
+                '----- , -----'
+              )}
+            </div>
+            <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
+              Lat, Long
+            </div>
+          </div>
+
+          <div className={styles.card}>
+            <div className={styles.cardTitle}>Last Update</div>
+            <div className={styles.cardValue}>
+              {lastUpdated || '--:--:--'}
+            </div>
+            <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
+              Updates every 15 seconds
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
