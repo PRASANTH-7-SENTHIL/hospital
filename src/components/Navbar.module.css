@@ -1,0 +1,79 @@
+.navbar {
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 1rem 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.plusIcon {
+    background-color: var(--danger-red);
+    color: var(--white);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.navLinks {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    align-items: center;
+}
+
+.navLinks a {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.navLinks a:hover {
+    color: var(--primary-blue);
+}
+
+.dashboardBtn {
+    background-color: var(--danger-red);
+    color: var(--white) !important;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dashboardBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(230, 57, 70, 0.3);
+}
+
+@media (max-width: 768px) {
+    .navLinks {
+        display: none;
+        /* Mobile menu implementation deferred for simplicity */
+    }
+}

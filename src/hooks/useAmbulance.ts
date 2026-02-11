@@ -25,12 +25,12 @@ export const useAmbulance = () => {
                 const feed = response.data;
 
                 // ThingSpeak "last.json" returns schema like:
-                // { "created_at": "TIME", "entry_id": N, "field6": "LAT", "field7": "LNG" }
+                // { "created_at": "TIME", "entry_id": N, "field7": "LAT", "field8": "LNG" }
 
-                if (feed && feed.field6 && feed.field7) {
+                if (feed && feed.field7 && feed.field8) {
                     setData({
-                        latitude: parseFloat(feed.field6),
-                        longitude: parseFloat(feed.field7),
+                        latitude: parseFloat(feed.field7),
+                        longitude: parseFloat(feed.field8),
                         lastUpdated: new Date(feed.created_at).toLocaleTimeString(),
                         isLive: true,
                     });
