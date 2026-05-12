@@ -16,7 +16,7 @@ export default function Home() {
             <Link href="/dashboard" className={`${styles.btn} ${styles.btnPrimary}`}>
               🚑 Track Ambulance
             </Link>
-            <Link href="/contact" className={`${styles.btn} ${styles.btnSecondary}`}>
+            <Link href="/book-appointment" className={`${styles.btn} ${styles.btnSecondary}`}>
               Book Appointment
             </Link>
           </div>

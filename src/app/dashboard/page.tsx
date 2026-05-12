@@ -27,31 +27,40 @@ export default function Dashboard() {
     }
   };
 
+  const sendMessage = async () => {
+    try {
+      const response = await axios.post('/api/send-message');
+      if (response.data.success) {
+        console.log('Message initiated! Check your phone.');
+      } else {
+        console.error('Message failed: ' + (response.data.error || 'Unknown error'));
+      }
+    } catch (err) {
+      console.error('Error sending message', err);
+    }
+  };
+
   const resetCallStatus = () => {
-    localStorage.removeItem('ambulanceCallInitiated');
+    localStorage.removeItem('ambulanceAlertTriggered');
     setHasCalled(false);
-    setCallStatus('Call status reset. Ready to call again.');
+    setCallStatus('Alert status reset. Ready to notify again.');
   };
 
   useEffect(() => {
-    const checkAndCall = () => {
-      // Check if we already called in this session/trip using localStorage
-      const alreadyCalled = localStorage.getItem('ambulanceCallInitiated');
-
-      if (isLive && !hasCalled && !alreadyCalled) {
-        makeCall();
+    const checkAndNotify = () => {
+      // Initiates the call 10 seconds after visiting the page
+      if (!hasCalled) {
         setHasCalled(true);
-        localStorage.setItem('ambulanceCallInitiated', 'true');
+
+        setTimeout(() => {
+          makeCall();
+          sendMessage();
+        }, 10000);
       }
-      // Optional: Reset if ambulance goes offline? 
-      // For now, keeping it strict "one time" as requested. 
-      // We can add a "Reset" button if needed.
     };
 
-    if (isLive) {
-      checkAndCall();
-    }
-  }, [isLive, hasCalled]);
+    checkAndNotify();
+  }, [hasCalled]);
 
   // Cleanup effect: when component unmounts or isLive becomes false (trip ends), 
   // do we want to reset? 
@@ -76,6 +85,7 @@ export default function Dashboard() {
 
       <div className={styles.container}>
         <section className={styles.mapSection}>
+
           <MapComponent lat={latitude} lng={longitude} />
         </section>
 
@@ -130,13 +140,13 @@ export default function Dashboard() {
           <div className={styles.card}>
             <div className={styles.cardTitle}>Current Location</div>
             <div className={styles.cardValue}>
-              {latitude && longitude ? (
+              {latitude !== null && longitude !== null ? (
                 <>
-                  <div>{latitude.toFixed(5)},</div>
-                  <div>{longitude.toFixed(5)}</div>
+                  <div>{latitude.toFixed(4)}° N,</div>
+                  <div>{longitude.toFixed(4)}° E</div>
                 </>
               ) : (
-                '----- , -----'
+                '11.476642° N , 78.000155° E'
               )}
             </div>
             <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
@@ -151,6 +161,25 @@ export default function Dashboard() {
             </div>
             <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
               Updates every 15 seconds
+            </div>
+          </div>
+          <div className={styles.card}>
+            <div className={styles.cardTitle}>Hospital Services</div>
+            <div className={styles.cardValue}>
+              <button
+                onClick={() => window.location.href = '/book-appointment'}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                Book Appointment
+              </button>
             </div>
           </div>
         </section>

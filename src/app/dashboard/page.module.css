@@ -52,6 +52,8 @@
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   min-height: 500px;
+  display: flex;
+  flex-direction: column;
 }
 
 .infoSection {
